@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huy Vuong, PhD | Bioinformatics Scientist & AI Engineer</title>
+    <meta name="description" content="Portfolio of Huy Vuong, PhD - Senior Bioinformatics Scientist & Bioinformatics Engineer specializing in Clinical NGS Pipelines, Cloud Architecture, and Agentic AI.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        slate: {
+                            850: '#151e2e',
+                            950: '#090d16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #34d399 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-glow:hover {
+            box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.15), 0 0 10px -5px rgba(52, 211, 153, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased selection:bg-sky-500/30 selection:text-sky-300">
+
+    <!-- Top Navigation -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-slate-950/80 border-b border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="font-mono font-semibold text-lg tracking-tight text-white flex items-center gap-2">
+                <span class="text-sky-400">&gt;</span> huy_vuong<span class="text-emerald-400">.phd</span>
+            </a>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+                <a href="#projects" class="hover:text-white transition-colors">Featured Projects</a>
+                <a href="#architecture" class="hover:text-white transition-colors">Technical Stack</a>
+                <a href="#experience" class="hover:text-white transition-colors">Background</a>
+                <a href="https://github.com/huyvuong" target="_blank" rel="noopener noreferrer" 
+                   class="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors border border-slate-700">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span>GitHub</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative pt-20 pb-24 md:pt-28 md:pb-32 overflow-hidden border-b border-slate-900">
+        <div class="max-w-6xl mx-auto px-6 relative z-10">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-mono mb-6">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                Production-Grade Genomics &bull; Cloud Infrastructure &bull; Applied AI
+            </div>
+            
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white max-w-4xl leading-[1.15]">
+                Bridging Clinical Bioinformatics, <br class="hidden md:inline" />
+                <span class="gradient-text">Scalable Nextflow Pipelines, &amp; Agentic AI.</span>
+            </h1>
+            
+            <p class="mt-6 text-lg md:text-xl text-slate-400 max-w-3xl leading-relaxed">
+                I am <strong class="text-slate-200 font-medium">Huy Vuong, PhD</strong>—a Senior Bioinformatics Scientist and Bioinformatics Engineer specializing in high-throughput Next-Generation Sequencing (NGS) workflows, AWS cloud automation, and AI-powered systems for clinical diagnostics and precision medicine.
+            </p>
+
+            <div class="mt-10 flex flex-wrap items-center gap-4">
+                <a href="#projects" class="px-6 py-3 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-semibold text-sm transition-all flex items-center gap-2 shadow-lg shadow-sky-500/20">
+                    <span>Explore Featured Repositories</span>
+                    <i data-lucide="arrow-down-right" class="w-4 h-4"></i>
+                </a>
+                <a href="https://github.com/huyvuong" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 font-medium text-sm border border-slate-800 transition-all flex items-center gap-2">
+                    <i data-lucide="github" class="w-4 h-4 text-slate-400"></i>
+                    <span>github.com/huyvuong</span>
+                </a>
+            </div>
+
+            <!-- Key Highlights Bar -->
+            <div class="mt-16 pt-10 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                    <div class="text-xs font-mono uppercase tracking-wider text-slate-500">Core Domain</div>
+                    <div class="mt-1 text-sm font-semibold text-slate-200">CAP/CLIA Clinical NGS</div>
+                </div>
+                <div>
+                    <div class="text-xs font-mono uppercase tracking-wider text-slate-500">Workflow Engine</div>
+                    <div class="mt-1 text-sm font-semibold text-slate-200">Nextflow DSL2 &amp; AWS Batch</div>
+                </div>
+                <div>
+                    <div class="text-xs font-mono uppercase tracking-wider text-slate-500">AI / Automation</div>
+                    <div class="mt-1 text-sm font-semibold text-slate-200">MCP Servers &amp; Multi-Agent Systems</div>
+                </div>
+                <div>
+                    <div class="text-xs font-mono uppercase tracking-wider text-slate-500">Credentials</div>
+                    <div class="mt-1 text-sm font-semibold text-slate-200">PhD Bioinformatics &bull; AWS Certified</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Repositories Section -->
+    <section id="projects" class="py-24 max-w-6xl mx-auto px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-14">
+            <div>
+                <div class="text-xs font-mono uppercase tracking-widest text-sky-400 mb-2">Portfolio Showcase</div>
+                <h2 class="text-3xl font-bold text-white tracking-tight">Featured Engineering Repositories</h2>
+            </div>
+            <p class="text-slate-400 text-sm max-w-md mt-4 md:mt-0">
+                Architected to demonstrate end-to-end capabilities across clinical variant curation, scalable bioinformatics pipelines, and full-stack AI engineering.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Project 1: emedgene-paper-agent -->
+            <article class="bg-slate-900/70 border border-slate-800 rounded-2xl p-7 flex flex-col justify-between card-glow transition-all duration-300 hover:border-sky-500/40">
+                <div>
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <div class="p-3 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400">
+                            <i data-lucide="bot" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-slate-800 text-sky-300 border border-slate-700">
+                            Clinical AI &amp; MCP
+                        </span>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                        emedgene-paper-agent
+                    </h3>
+                    
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        An AI-driven clinical literature curation prototype (<span class="text-slate-300 font-mono text-xs">Paper2Agent</span>) that converts biomedical publications into interactive, queryable clinical curation agents using Natural Language Processing and the Model Context Protocol (MCP).
+                    </p>
+
+                    <div class="mb-6">
+                        <div class="text-xs font-mono uppercase text-slate-500 mb-2.5">Architectural Highlights</div>
+                        <ul class="space-y-2 text-xs text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Automates variant-level evidence extraction to accelerate Tertiary NGS interpretation workflows (e.g., Emedgene / ACMG curation).</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Exposes structured genomic literature tools and entity parsing via standardized MCP server endpoints.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Reduces manual literature review bottlenecks for rare disease and somatic oncology interpretation.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex flex-wrap gap-1.5 mb-6 pt-4 border-t border-slate-800/80">
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Python</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">MCP Server</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">LLM Agents</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Biomedical NLP</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Variant Curation</span>
+                    </div>
+
+                    <a href="https://github.com/huyvuong/emedgene-paper-agent" target="_blank" rel="noopener noreferrer" 
+                       class="w-full py-2.5 px-4 rounded-lg bg-slate-800 hover:bg-sky-500 hover:text-slate-950 text-slate-200 font-medium text-xs transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                        <span>View Repository on GitHub</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5 ml-auto"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Project 2: nextflow-clinical-ngs -->
+            <article class="bg-slate-900/70 border border-slate-800 rounded-2xl p-7 flex flex-col justify-between card-glow transition-all duration-300 hover:border-emerald-500/40">
+                <div>
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <div class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+                            <i data-lucide="dna" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-slate-800 text-emerald-300 border border-slate-700">
+                            Production Genomics
+                        </span>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                        nextflow-clinical-ngs
+                    </h3>
+                    
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        A modular, production-grade Nextflow DSL2 clinical NGS meta-pipeline engineered to orchestrate germline, matched tumor-normal, and tumor-only sequencing workflows with strict quality control gates.
+                    </p>
+
+                    <div class="mb-6">
+                        <div class="text-xs font-mono uppercase text-slate-500 mb-2.5">Architectural Highlights</div>
+                        <ul class="space-y-2 text-xs text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Built with modular DSL2 subworkflows supporting alignment, variant calling (GATK, Mutect2, Strelka2, FreeBayes), and annotation.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Enforces automated clinical QC checkpoints, provenance tracking, and reproducible containerization via Docker for CAP/CLIA readiness.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Cloud-native execution profiles tailored for scalable compute orchestration on AWS Batch and S3.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex flex-wrap gap-1.5 mb-6 pt-4 border-t border-slate-800/80">
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Nextflow DSL2</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">AWS Batch</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Docker</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">GATK / Mutect2</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">CAP/CLIA QC</span>
+                    </div>
+
+                    <a href="https://github.com/huyvuong/nextflow-clinical-ngs" target="_blank" rel="noopener noreferrer" 
+                       class="w-full py-2.5 px-4 rounded-lg bg-slate-800 hover:bg-emerald-500 hover:text-slate-950 text-slate-200 font-medium text-xs transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                        <span>View Repository on GitHub</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5 ml-auto"></i>
+                    </a>
+                </div>
+            </article>
+
+            <!-- Project 3: meal-tracker -->
+            <article class="bg-slate-900/70 border border-slate-800 rounded-2xl p-7 flex flex-col justify-between card-glow transition-all duration-300 hover:border-purple-500/40">
+                <div>
+                    <div class="flex items-center justify-between gap-4 mb-6">
+                        <div class="p-3 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+                            <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-slate-800 text-purple-300 border border-slate-700">
+                            Full-Stack AI App
+                        </span>
+                    </div>
+
+                    <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-2">
+                        meal-tracker
+                    </h3>
+                    
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        An intelligent nutritional analysis and metabolic meal-tracking application leveraging multi-agent pipelines and computer vision to evaluate dietary inputs, macronutrients, and metabolic risk biomarkers.
+                    </p>
+
+                    <div class="mb-6">
+                        <div class="text-xs font-mono uppercase text-slate-500 mb-2.5">Architectural Highlights</div>
+                        <ul class="space-y-2 text-xs text-slate-300">
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Demonstrates full-stack software engineering, asynchronous task processing, and RESTful API design.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Integrates multi-modal AI agents to parse food imagery into structured nutritional profiles and actionable health recommendations.</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                                <span>Designed with extensible data schemas for longitudinal tracking, database persistence, and CI/CD test automation.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex flex-wrap gap-1.5 mb-6 pt-4 border-t border-slate-800/80">
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Python / FastAPI</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Multi-Modal AI</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">REST APIs</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">Data Modeling</span>
+                        <span class="px-2 py-0.5 text-[11px] font-mono rounded bg-slate-800 text-slate-300">CI/CD</span>
+                    </div>
+
+                    <a href="https://github.com/huyvuong/meal-tracker" target="_blank" rel="noopener noreferrer" 
+                       class="w-full py-2.5 px-4 rounded-lg bg-slate-800 hover:bg-purple-500 hover:text-slate-950 text-slate-200 font-medium text-xs transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="github" class="w-4 h-4"></i>
+                        <span>View Repository on GitHub</span>
+                        <i data-lucide="external-link" class="w-3.5 h-3.5 ml-auto"></i>
+                    </a>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- Technical Competencies Matrix -->
+    <section id="architecture" class="py-20 bg-slate-900/40 border-y border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-xs font-mono uppercase tracking-widest text-emerald-400 mb-2">Core Competencies</div>
+            <h2 class="text-3xl font-bold text-white tracking-tight mb-12">Technical Architecture &amp; Tooling</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Col 1 -->
+                <div class="p-6 rounded-xl bg-slate-950 border border-slate-800/90">
+                    <div class="flex items-center gap-3 mb-4 text-sky-400">
+                        <i data-lucide="workflow" class="w-5 h-5"></i>
+                        <h3 class="font-semibold text-white text-sm">Pipelines &amp; Cloud</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-400 font-mono">
+                        <li>&bull; Nextflow (DSL2) / nf-core</li>
+                        <li>&bull; AWS (Batch, EC2, S3, IAM)</li>
+                        <li>&bull; Docker &amp; Singularity</li>
+                        <li>&bull; GitHub Actions (CI/CD)</li>
+                        <li>&bull; Bash / Linux Administration</li>
+                    </ul>
+                </div>
+
+                <!-- Col 2 -->
+                <div class="p-6 rounded-xl bg-slate-950 border border-slate-800/90">
+                    <div class="flex items-center gap-3 mb-4 text-emerald-400">
+                        <i data-lucide="microscope" class="w-5 h-5"></i>
+                        <h3 class="font-semibold text-white text-sm">Genomics &amp; NGS</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-400 font-mono">
+                        <li>&bull; WGS, WES, Targeted Panels</li>
+                        <li>&bull; GATK, Mutect2, Strelka2</li>
+                        <li>&bull; Illumina DRAGEN &amp; BaseSpace</li>
+                        <li>&bull; 10x CellRanger &amp; SpaceRanger</li>
+                        <li>&bull; Seurat, Scanpy (scRNA-seq)</li>
+                    </ul>
+                </div>
+
+                <!-- Col 3 -->
+                <div class="p-6 rounded-xl bg-slate-950 border border-slate-800/90">
+                    <div class="flex items-center gap-3 mb-4 text-purple-400">
+                        <i data-lucide="cpu" class="w-5 h-5"></i>
+                        <h3 class="font-semibold text-white text-sm">AI &amp; Agentic Systems</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-400 font-mono">
+                        <li>&bull; Model Context Protocol (MCP)</li>
+                        <li>&bull; Multi-Agent Orchestration</li>
+                        <li>&bull; Biomedical NLP &amp; RAG</li>
+                        <li>&bull; AWS Certified AI Practitioner</li>
+                        <li>&bull; Automated Literature Curation</li>
+                    </ul>
+                </div>
+
+                <!-- Col 4 -->
+                <div class="p-6 rounded-xl bg-slate-950 border border-slate-800/90">
+                    <div class="flex items-center gap-3 mb-4 text-amber-400">
+                        <i data-lucide="code-2" class="w-5 h-5"></i>
+                        <h3 class="font-semibold text-white text-sm">Software Engineering</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-400 font-mono">
+                        <li>&bull; Python (Pytest, Pandas, Pydantic)</li>
+                        <li>&bull; R / Bioconductor</li>
+                        <li>&bull; FastAPI, Redis, Celery</li>
+                        <li>&bull; MySQL / Relational Schemas</li>
+                        <li>&bull; CAP/CLIA Software Validation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience & Education Summary -->
+    <section id="experience" class="py-24 max-w-6xl mx-auto px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            
+            <!-- Left Column: Career Narrative -->
+            <div class="lg:col-span-7">
+                <div class="text-xs font-mono uppercase tracking-widest text-sky-400 mb-2">Leadership &amp; Execution</div>
+                <h2 class="text-3xl font-bold text-white tracking-tight mb-6">Built for Regulated Clinical Scale</h2>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                    With a career spanning clinical genetic testing and high-throughput biorepository operations at organizations including <strong class="text-slate-200">Ambry Genetics</strong> and <strong class="text-slate-200">Sampled</strong>, I specialize in translating complex biological assays into deterministic, automated, and cloud-scalable production software.
+                </p>
+                <div class="space-y-4">
+                    <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <h4 class="text-sm font-semibold text-white">End-to-End Pipeline Architecture</h4>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                            Extensive track record migrating legacy scripts into containerized, modular Nextflow workflows running on AWS Batch—optimizing turnaround times, compute cost efficiency, and reproducibility for high-volume clinical samples.
+                        </p>
+                    </div>
+                    <div class="p-5 rounded-xl bg-slate-900/60 border border-slate-800">
+                        <h4 class="text-sm font-semibold text-white">AI-Augmented Bioinformatics</h4>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+                            Pioneering the integration of LLM agents and Model Context Protocol (MCP) architectures into tertiary variant interpretation and everyday engineering workflows, bridging domain science with modern software engineering.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Education & Credentials -->
+            <div class="lg:col-span-5">
+                <div class="text-xs font-mono uppercase tracking-widest text-emerald-400 mb-2">Academic Foundation</div>
+                <h2 class="text-3xl font-bold text-white tracking-tight mb-6">Education &amp; Credentials</h2>
+                
+                <div class="space-y-4">
+                    <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 flex items-start gap-4">
+                        <div class="p-2.5 rounded-lg bg-slate-800 text-sky-400 shrink-0 mt-0.5">
+                            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-white">PhD in Bioinformatics</div>
+                            <div class="text-xs text-slate-400">University of Michigan</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 flex items-start gap-4">
+                        <div class="p-2.5 rounded-lg bg-slate-800 text-emerald-400 shrink-0 mt-0.5">
+                            <i data-lucide="award" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-white">NLM Postdoctoral Fellowship, Biomedical Informatics</div>
+                            <div class="text-xs text-slate-400">Vanderbilt University Medical Center</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 flex items-start gap-4">
+                        <div class="p-2.5 rounded-lg bg-slate-800 text-purple-400 shrink-0 mt-0.5">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-white">Bachelor of Arts in Biochemistry</div>
+                            <div class="text-xs text-slate-400">Hunter College</div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/40 border border-slate-800/80 flex items-start gap-4">
+                        <div class="p-2.5 rounded-lg bg-slate-800 text-amber-400 shrink-0 mt-0.5">
+                            <i data-lucide="cloud-cog" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <div class="text-sm font-semibold text-white">AWS Certified AI Practitioner</div>
+                            <div class="text-xs text-slate-400">Amazon Web Services</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer / Contact CTA -->
+    <footer class="border-t border-slate-800/80 bg-slate-950 py-16">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <div class="font-mono font-semibold text-white flex items-center gap-2">
+                    <span class="text-sky-400">&gt;</span> Huy Vuong, PhD
+                </div>
+                <p class="text-xs text-slate-500 mt-1">
+                    Senior Bioinformatics Scientist &amp; Bioinformatics Engineer &bull; Southern California
+                </p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/huyvuong" target="_blank" rel="noopener noreferrer" 
+                   class="px-4 py-2 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-mono border border-slate-800 transition-colors flex items-center gap-2">
+                    <i data-lucide="github" class="w-4 h-4"></i>
+                    <span>github.com/huyvuong</span>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
