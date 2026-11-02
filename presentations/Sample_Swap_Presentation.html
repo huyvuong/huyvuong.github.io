@@ -1,0 +1,940 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Detecting Sample Swaps in RNA-Seq Workflows</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/white.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/monokai.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --slate-50: #f8fafc;
+        --slate-100: #f1f5f9;
+        --slate-200: #e2e8f0;
+        --slate-300: #cbd5e1;
+        --slate-400: #94a3b8;
+        --slate-500: #64748b;
+        --slate-600: #475569;
+        --slate-700: #334155;
+        --slate-800: #1e293b;
+        --slate-900: #0f172a;
+        --blue-50: #eff6ff;
+        --blue-100: #dbeafe;
+        --blue-500: #3b82f6;
+        --blue-600: #2563eb;
+        --blue-700: #1d4ed8;
+        --teal-50: #f0fdfa;
+        --teal-500: #14b8a6;
+        --teal-600: #0d9488;
+        --teal-700: #0f766e;
+        --emerald-50: #ecfdf5;
+        --emerald-500: #10b981;
+        --emerald-600: #059669;
+        --red-50: #fef2f2;
+        --red-500: #ef4444;
+        --red-600: #dc2626;
+        --amber-50: #fffbeb;
+        --amber-500: #f59e0b;
+        --amber-600: #d97706;
+      }
+
+      .reveal-viewport {
+        background: var(--slate-50);
+      }
+
+      .reveal {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: var(--slate-800);
+      }
+
+      .reveal .slides section {
+        text-align: left;
+        padding: 0 2em;
+      }
+
+      .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+        text-transform: none;
+        font-family: 'Inter', sans-serif;
+        color: var(--slate-900);
+        letter-spacing: -0.02em;
+        font-weight: 700;
+      }
+
+      .reveal h2 {
+        font-size: 1.8em;
+        margin-bottom: 0.2em;
+      }
+
+      .reveal h3 {
+        font-size: 1.35em;
+        margin-bottom: 0.6em;
+        color: var(--slate-800);
+      }
+
+      .reveal p {
+        color: var(--slate-600);
+        font-weight: 400;
+        line-height: 1.6;
+      }
+
+      .reveal ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .reveal ul li {
+        margin-bottom: 0.6em;
+        padding-left: 1.5em;
+        position: relative;
+        color: var(--slate-700);
+        font-size: 0.85em;
+        line-height: 1.6;
+      }
+
+      .reveal ul li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.55em;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--slate-400);
+      }
+
+      .reveal ul ul li {
+        font-size: 0.95em;
+        margin-bottom: 0.35em;
+      }
+
+      .reveal ul ul li::before {
+        width: 5px;
+        height: 5px;
+        background: var(--slate-300);
+      }
+
+      .reveal pre {
+        width: 100%;
+        margin: 0.8em 0;
+        box-shadow: none;
+        border: 1px solid var(--slate-200);
+        border-radius: 10px;
+        background: var(--slate-900);
+      }
+
+      .reveal pre code {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.5em;
+        line-height: 1.7;
+        padding: 1.2em 1.5em;
+        border-radius: 10px;
+        max-height: 500px;
+      }
+
+      .reveal code {
+        font-family: 'JetBrains Mono', monospace;
+        background: var(--slate-100);
+        color: var(--blue-700);
+        padding: 0.15em 0.4em;
+        border-radius: 4px;
+        font-size: 0.85em;
+        border: 1px solid var(--slate-200);
+      }
+
+      .reveal table {
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 0.6em;
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--slate-200);
+        background: white;
+      }
+
+      .reveal table thead tr {
+        background: var(--slate-800);
+      }
+
+      .reveal table thead th {
+        color: var(--slate-100);
+        font-weight: 600;
+        padding: 0.85em 1em;
+        border: none;
+        text-align: left;
+        font-size: 0.95em;
+        letter-spacing: 0.02em;
+      }
+
+      .reveal table tbody td {
+        padding: 0.7em 1em;
+        border-bottom: 1px solid var(--slate-100);
+        color: var(--slate-700);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9em;
+      }
+
+      .reveal table tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      .reveal table tbody tr:hover {
+        background: var(--slate-50);
+      }
+
+      /* ---------- Title slide ---------- */
+      .title-slide {
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .title-slide h2 {
+        font-size: 2em;
+        line-height: 1.2;
+        margin-bottom: 0.3em;
+        max-width: 80%;
+      }
+
+      .title-slide .subtitle {
+        color: var(--slate-500);
+        font-size: 0.9em;
+        font-weight: 400;
+        margin-bottom: 1.5em;
+        max-width: 70%;
+      }
+
+      .title-divider {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--blue-600), var(--teal-600));
+        border-radius: 2px;
+        margin: 0 auto 1.5em;
+      }
+
+      .title-meta {
+        font-size: 0.65em;
+        color: var(--slate-400);
+        font-weight: 400;
+        letter-spacing: 0.05em;
+      }
+
+      /* ---------- Section header ---------- */
+      .slide-header {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        margin-bottom: 0.6em;
+      }
+
+      .slide-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9em;
+        flex-shrink: 0;
+      }
+
+      .slide-header-icon.blue   { background: var(--blue-100); color: var(--blue-600); }
+      .slide-header-icon.teal   { background: var(--teal-50); color: var(--teal-600); }
+      .slide-header-icon.slate  { background: var(--slate-200); color: var(--slate-600); }
+
+      /* ---------- Pipeline flow diagram ---------- */
+      .pipeline-flow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        margin: 1.2em 0;
+        flex-wrap: nowrap;
+      }
+
+      .pipeline-step {
+        background: white;
+        border: 1px solid var(--slate-200);
+        border-radius: 10px;
+        padding: 0.9em 1em;
+        text-align: center;
+        min-width: 150px;
+        flex: 1;
+        max-width: 200px;
+        transition: box-shadow 0.2s ease;
+      }
+
+      .pipeline-step:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      }
+
+      .pipeline-step .step-label {
+        font-size: 0.52em;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--slate-400);
+        font-weight: 600;
+        margin-bottom: 0.3em;
+      }
+
+      .pipeline-step .step-title {
+        font-size: 0.7em;
+        font-weight: 600;
+        color: var(--slate-800);
+        margin-bottom: 0.2em;
+      }
+
+      .pipeline-step .step-detail {
+        font-size: 0.5em;
+        color: var(--slate-500);
+        font-weight: 400;
+      }
+
+      .pipeline-arrow {
+        font-size: 1.2em;
+        color: var(--slate-300);
+        flex-shrink: 0;
+        padding: 0 0.15em;
+      }
+
+      .pipeline-step.step-input   { border-top: 3px solid var(--slate-400); }
+      .pipeline-step.step-align   { border-top: 3px solid var(--blue-500); }
+      .pipeline-step.step-variant { border-top: 3px solid var(--teal-500); }
+      .pipeline-step.step-fp      { border-top: 3px solid var(--amber-500); }
+      .pipeline-step.step-qc      { border-top: 3px solid var(--emerald-500); }
+
+      /* ---------- LOD zones ---------- */
+      .lod-zones {
+        display: flex;
+        gap: 1em;
+        margin: 1em 0;
+      }
+
+      .lod-zone {
+        flex: 1;
+        padding: 1em 1.1em;
+        border-radius: 10px;
+        border-left: 4px solid transparent;
+      }
+
+      .lod-zone.match {
+        background: var(--emerald-50);
+        border-left-color: var(--emerald-500);
+      }
+
+      .lod-zone.mismatch {
+        background: var(--red-50);
+        border-left-color: var(--red-500);
+      }
+
+      .lod-zone.undetermined {
+        background: var(--amber-50);
+        border-left-color: var(--amber-500);
+      }
+
+      .lod-zone .zone-threshold {
+        font-size: 0.65em;
+        font-weight: 700;
+        font-family: 'JetBrains Mono', monospace;
+        margin-bottom: 0.25em;
+      }
+
+      .lod-zone.match .zone-threshold       { color: var(--emerald-600); }
+      .lod-zone.mismatch .zone-threshold    { color: var(--red-600); }
+      .lod-zone.undetermined .zone-threshold { color: var(--amber-600); }
+
+      .lod-zone .zone-label {
+        font-size: 0.7em;
+        font-weight: 600;
+        color: var(--slate-800);
+        margin-bottom: 0.15em;
+      }
+
+      .lod-zone .zone-desc {
+        font-size: 0.55em;
+        color: var(--slate-500);
+        line-height: 1.5;
+      }
+
+      /* ---------- LOD visual scale ---------- */
+      .lod-scale {
+        display: flex;
+        align-items: center;
+        margin: 0.8em 0 0.5em;
+        height: 24px;
+        border-radius: 12px;
+        overflow: hidden;
+        font-size: 0.5em;
+        font-weight: 600;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .lod-scale .scale-mismatch {
+        flex: 1;
+        background: linear-gradient(90deg, var(--red-500), #fca5a5);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .lod-scale .scale-undetermined {
+        flex: 1;
+        background: linear-gradient(90deg, #fde68a, #fcd34d);
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--slate-700);
+      }
+
+      .lod-scale .scale-match {
+        flex: 1;
+        background: linear-gradient(90deg, #6ee7b7, var(--emerald-500));
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      /* ---------- Status badges ---------- */
+      .badge {
+        display: inline-block;
+        font-size: 0.85em;
+        font-weight: 600;
+        padding: 0.2em 0.65em;
+        border-radius: 6px;
+        letter-spacing: 0.02em;
+        font-family: 'Inter', sans-serif;
+      }
+
+      .badge-match       { background: var(--emerald-50); color: var(--emerald-600); }
+      .badge-mismatch    { background: var(--red-50); color: var(--red-600); }
+      .badge-undetermined { background: var(--amber-50); color: var(--amber-600); }
+      .badge-consistent  { background: var(--emerald-50); color: var(--emerald-600); border: 1px solid #a7f3d0; }
+      .badge-swap        { background: var(--red-50); color: var(--red-600); border: 1px solid #fecaca; }
+      .badge-defer       { background: var(--amber-50); color: var(--amber-600); border: 1px solid #fde68a; }
+
+      /* ---------- Impact cards ---------- */
+      .impact-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8em;
+        margin: 0.8em 0;
+      }
+
+      .impact-card {
+        background: white;
+        border: 1px solid var(--slate-200);
+        border-radius: 10px;
+        padding: 1em 1.1em;
+        transition: box-shadow 0.2s ease;
+      }
+
+      .impact-card:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      }
+
+      .impact-card .card-icon {
+        display: none;
+      }
+
+      .impact-card .card-title {
+        font-size: 0.7em;
+        font-weight: 600;
+        color: var(--slate-800);
+        margin-bottom: 0.2em;
+      }
+
+      .impact-card .card-desc {
+        font-size: 0.55em;
+        color: var(--slate-500);
+        line-height: 1.5;
+      }
+
+      .next-steps-list {
+        margin-top: 0.8em;
+      }
+
+      .next-steps-list li::before {
+        content: '';
+        background: var(--blue-500) !important;
+      }
+
+      .next-steps-list li {
+        font-size: 0.75em;
+      }
+
+      /* ---------- Q&A slide ---------- */
+      .qa-slide {
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .qa-slide h2 {
+        font-size: 2.2em;
+        margin-bottom: 0.2em;
+      }
+
+      .qa-slide p {
+        font-size: 0.85em;
+        max-width: 60%;
+        margin: 0 auto;
+      }
+
+      .qa-icon {
+        display: none;
+      }
+
+      .qa-divider {
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--blue-600), var(--teal-600));
+        border-radius: 2px;
+        margin: 1em auto 1.2em;
+      }
+
+      .qa-contact {
+        font-size: 0.55em;
+        color: var(--slate-400);
+        margin-top: 0.5em;
+      }
+
+      /* ---------- Slide number ---------- */
+      .reveal .slide-number {
+        font-family: 'Inter', sans-serif;
+        font-size: 0.55em;
+        font-weight: 500;
+        color: var(--slate-400);
+        background: none;
+        right: 1.5em;
+        bottom: 1em;
+      }
+
+      /* ---------- Progress bar ---------- */
+      .reveal .progress {
+        height: 3px;
+        background: var(--slate-200);
+      }
+
+      .reveal .progress span {
+        background: linear-gradient(90deg, var(--blue-600), var(--teal-600));
+      }
+
+      /* ---------- Controls ---------- */
+      .reveal .controls {
+        color: var(--slate-400);
+      }
+
+      /* ---------- Notes ---------- */
+      .notes-container { display: none; }
+
+      /* ---------- Small helper ---------- */
+      .text-sm { font-size: 0.7em; }
+      .text-xs { font-size: 0.6em; }
+      .text-muted { color: var(--slate-500); }
+      .mt-1 { margin-top: 0.6em; }
+      .mb-1 { margin-bottom: 0.6em; }
+
+      .slide-footnote {
+        font-size: 0.48em;
+        color: var(--slate-400);
+        margin-top: 1.2em;
+        font-style: italic;
+      }
+
+      /* Code slide subtitle */
+      .code-subtitle {
+        font-size: 0.65em;
+        color: var(--slate-500);
+        font-weight: 400;
+        margin-bottom: 0.6em;
+      }
+
+      /* Code annotation */
+      .code-annotations {
+        display: flex;
+        gap: 1.5em;
+        margin-top: 0.5em;
+      }
+      .code-annotation {
+        font-size: 0.52em;
+        color: var(--slate-500);
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+      }
+      .code-annotation .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .dot-classify { background: var(--blue-500); }
+      .dot-evaluate { background: var(--teal-500); }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- Slide 1 — Title -->
+        <section class="title-slide">
+          <h2>Detecting Sample Swaps<br>in RNA-Seq Workflows</h2>
+          <p class="subtitle">Automated QC utilizing DRAGEN and Picard CrosscheckFingerprints</p>
+          <div class="title-divider"></div>
+          <p class="title-meta" style="font-size: 0.8em; color: var(--slate-700); font-weight: 500; margin-bottom: 0.2em;">Huy Vuong</p>
+          <p class="title-meta">Senior Bioinformaticist &nbsp;·&nbsp; Genomics</p>
+          <aside class="notes">
+            Hi everyone. / Today I'm going to walk through a project I led / to build an automated pipeline for detecting sample swaps in RNA-Seq [RNA-sek] data. /
+
+            I chose this project because in a clinical genomics lab, / sample integrity is non-negotiable. / A single mislabeled sample can lead to incorrect variant calls, / misattributed clinical reports, / and at worst — impact patient care decisions. /
+
+            Before this pipeline existed, / swap detection was manual and inconsistent. / This was a cross-functional effort: / I partnered closely with the clinical lab team to understand their accessioning [ak-SESH-un-ing] workflows and failure modes, / coordinated with the sequencing team on metadata handoff, / worked with the PM team to define acceptance criteria and rollout timelines, / and collaborated with the QA [Q-A] team to design and execute the formal validation of the pipeline. /
+
+            The result is an automated QC [Q-C] gate that runs early in our workflow, / ensuring sample identity is verified / before any computationally expensive or clinically reportable analysis proceeds.
+          </aside>
+        </section>
+
+        <!-- Slide 2 — Pipeline Architecture -->
+        <section>
+          <div class="slide-header">
+            <div class="slide-header-icon blue"></div>
+            <h3 style="margin:0;">Pipeline Architecture</h3>
+          </div>
+
+          <div class="pipeline-flow">
+            <div class="pipeline-step step-input">
+              <div class="step-label">Input</div>
+              <div class="step-title">RNA-Seq FASTQs</div>
+              <div class="step-detail">Paired-end reads</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step step-align">
+              <div class="step-label">Alignment</div>
+              <div class="step-title">DRAGEN RNA</div>
+              <div class="step-detail">Splice-aware mapping</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step step-variant">
+              <div class="step-label">Variant Calling</div>
+              <div class="step-title">Somatic Small Variant Caller</div>
+              <div class="step-detail">Handles RNA VAFs</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step step-fp">
+              <div class="step-label">Fingerprinting</div>
+              <div class="step-title">CrosscheckFingerprints</div>
+              <div class="step-detail">Pairwise LOD scores</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-step step-qc">
+              <div class="step-label">QC Gate</div>
+              <div class="step-title">Swap Detection</div>
+              <div class="step-detail">Pass / Flag / Defer</div>
+            </div>
+          </div>
+
+          <ul style="margin-top: 0.4em;">
+            <li><strong>Variant Calling:</strong> DRAGEN's somatic mode accurately captures variants despite differential expression and RNA editing artifacts.</li>
+            <li><strong>Fingerprinting:</strong> Picard <code>CrosscheckFingerprints</code> compares genetic signatures across all sample pairs, producing a pairwise LOD matrix.</li>
+            <li><strong>Infrastructure:</strong> Orchestrated via Nextflow on Slurm for horizontal scalability.</li>
+          </ul>
+
+          <aside class="notes">
+            The workflow starts with DRAGEN [DRAY-jen] processing the RNA FASTQs [FAST-kyoos]. / Because this is RNA and not DNA, / we face the challenge of variable coverage due to differential gene expression, / as well as RNA editing. /
+
+            To extract a reliable germline fingerprint, / we enable DRAGEN's [DRAY-jenz] somatic [so-MAT-ik] variant calling mode, / which accurately captures variants at as low as 5% variant allele frequency. /
+
+            We take the resulting VCFs [V-C-Fs] / and pass them into Picard's [pih-CARD] CrosscheckFingerprints tool, / which compares the genetic signatures / and outputs a pairwise matrix of LOD [L-O-D] scores. /
+
+            The entire pipeline is orchestrated through Nextflow [NEXT-flow] running on Slurm [slurm], / so it scales horizontally as our sample volume grows.
+          </aside>
+        </section>
+
+        <!-- Slide 3 — LOD Decision Rule -->
+        <section>
+          <div class="slide-header">
+            <div class="slide-header-icon teal"></div>
+            <h3 style="margin:0;">Three-Zone LOD Decision Rule</h3>
+          </div>
+          <p class="text-sm text-muted mb-1">LOD scores (log<sub>10</sub> likelihood ratio) quantify genetic concordance between sample pairs.</p>
+
+          <div class="lod-scale">
+            <div class="scale-mismatch">← MISMATCH</div>
+            <div class="scale-undetermined">UNDETERMINED</div>
+            <div class="scale-match">MATCH →</div>
+          </div>
+          <div style="display:flex; justify-content:space-between; font-size:0.48em; color:var(--slate-400); font-family:'JetBrains Mono',monospace; padding: 0.2em 0.3em;">
+            <span>LOD &lt; −5</span>
+            <span>−5 ≤ LOD ≤ 5</span>
+            <span>LOD &gt; 5</span>
+          </div>
+
+          <div class="lod-zones">
+            <div class="lod-zone match">
+              <div class="zone-threshold">LOD &gt; 5</div>
+              <div class="zone-label">Match</div>
+              <div class="zone-desc">Strong evidence samples share genetic background. Pipeline proceeds.</div>
+            </div>
+            <div class="lod-zone mismatch">
+              <div class="zone-threshold">LOD &lt; −5</div>
+              <div class="zone-label">Mismatch</div>
+              <div class="zone-desc">Strong evidence samples are unrelated. Flags for review.</div>
+            </div>
+            <div class="lod-zone undetermined">
+              <div class="zone-threshold">−5 ≤ LOD ≤ 5</div>
+              <div class="zone-label">Undetermined</div>
+              <div class="zone-desc">Insufficient evidence — defers to source metadata rather than guessing.</div>
+            </div>
+          </div>
+
+          <p class="slide-footnote">Thresholds calibrated for RNA-Seq coverage variability; more conservative than typical WGS thresholds.</p>
+
+          <aside class="notes">
+            Picard [pih-CARD] provides us with a LOD [L-O-D] score, / which represents the log-ratio of the likelihood / that two samples share the same genetic background / versus being completely distinct. /
+
+            For our automated decision logic, / we use a three-zone rule. / If the LOD is greater than 5, / we call it a Match. / If it's less than negative 5, / we call it a Mismatch. /
+
+            The critical part is the gray zone — between negative 5 and positive 5. / Because RNA-seq [RNA-sek] coverage can be spotty, / we treat this range as "Undetermined." / In these cases, / we intentionally defer to the input metadata provided by the source / rather than guessing.
+          </aside>
+        </section>
+
+        <!-- Slide 4 — Evaluation Logic -->
+        <section>
+          <div class="slide-header">
+            <div class="slide-header-icon slate"></div>
+            <h3 style="margin:0;">Evaluation Logic</h3>
+          </div>
+          <p class="code-subtitle">Python module powering the automated QC gate decision</p>
+
+          <pre><code data-trim data-noescape class="python">
+def classify_lod(lod: float) -> str:
+    """Categorize LOD score into three-zone decision."""
+    if lod > 5:
+        return "MATCH"
+    if lod < -5:
+        return "MISMATCH"
+    return "UNDETERMINED"
+
+
+def evaluate_pair(lod_call: str, same_family_expected: bool) -> str:
+    """Cross-reference genetic call against sample manifest.
+
+    Returns POTENTIAL_SWAP when genetics contradict metadata,
+    triggering a pipeline halt for manual review.
+    """
+    if lod_call == "UNDETERMINED":
+        return "DEFER_TO_SOURCE"
+    if lod_call == "MATCH" and same_family_expected:
+        return "CONSISTENT"
+    if lod_call == "MISMATCH" and not same_family_expected:
+        return "CONSISTENT"
+    return "POTENTIAL_SWAP"
+          </code></pre>
+
+          <div class="code-annotations">
+            <div class="code-annotation"><span class="dot dot-classify"></span> <code>classify_lod</code> — Three-zone LOD classification</div>
+            <div class="code-annotation"><span class="dot dot-evaluate"></span> <code>evaluate_pair</code> — Metadata cross-reference &amp; swap detection</div>
+          </div>
+
+          <aside class="notes">
+            This Python logic drives the final QC [Q-C] gate. / We parse the Picard [pih-CARD] output / and map it against our sample manifest. /
+
+            The code first categorizes the LOD [L-O-D] score using our three-zone rule. / We then cross-reference that genetic call / against the expected family relationships from our metadata. /
+
+            If the genetics contradict the metadata — / for instance, if two samples share a family ID / but return a strong "Mismatch" LOD score — / the system outputs "POTENTIAL_SWAP" / and halts the workflow for review.
+          </aside>
+        </section>
+
+        <!-- Slide 5 — Evaluation Examples -->
+        <section>
+          <div class="slide-header">
+            <div class="slide-header-icon blue"></div>
+            <h3 style="margin:0;">Evaluation Examples</h3>
+          </div>
+          <p class="text-sm text-muted mb-1">Representative pairwise comparisons from a validation cohort</p>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Sample 1</th>
+                <th>Sample 2</th>
+                <th>Expected<br>Related</th>
+                <th>LOD</th>
+                <th>Call</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>S1_FamA</td>
+                <td>S2_FamA</td>
+                <td>True</td>
+                <td style="font-weight:600;">45.2</td>
+                <td><span class="badge badge-match">MATCH</span></td>
+                <td><span class="badge badge-consistent">CONSISTENT</span></td>
+              </tr>
+              <tr>
+                <td>S4_FamC</td>
+                <td>S5_FamC</td>
+                <td>True</td>
+                <td style="font-weight:600;">−28.4</td>
+                <td><span class="badge badge-mismatch">MISMATCH</span></td>
+                <td><span class="badge badge-swap">POTENTIAL SWAP</span></td>
+              </tr>
+              <tr>
+                <td>S7_FamE</td>
+                <td>S8_FamE</td>
+                <td>True</td>
+                <td style="font-weight:600;">3.2</td>
+                <td><span class="badge badge-undetermined">UNDETERMINED</span></td>
+                <td><span class="badge badge-defer">DEFER TO SOURCE</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="slide-footnote">Row 2 demonstrates a detected swap: metadata claims same family, but LOD −28.4 proves samples are genetically unrelated → pipeline halts for manual review.</p>
+
+          <aside class="notes">
+            Here is how the logic performs on real data pairs. /
+
+            The first row shows a clear success: / Family A matches Family A / with a strong LOD [L-O-D] score of 45.2. /
+
+            The second row flags a swap: / the metadata claims both samples are from Family C, / but the LOD score of negative 28.4 proves they are genetically unrelated. / This is exactly the kind of error this pipeline is designed to catch. /
+
+            Finally, the third row shows our undetermined behavior: / the samples are supposed to be related, / but a LOD of 3.2 isn't strong enough to confirm. / We default to "Defer to Source" / and allow the pipeline to proceed based on the manifest, / preventing an unnecessary pipeline failure.
+          </aside>
+        </section>
+
+        <!-- Slide 6 — Impact & Next Steps -->
+        <section>
+          <div class="slide-header">
+            <div class="slide-header-icon teal"></div>
+            <h3 style="margin:0;">Impact &amp; Next Steps</h3>
+          </div>
+
+          <div class="impact-grid">
+            <div class="impact-card" style="border-left: 3px solid var(--teal-500);">
+              <div class="card-title">Data Integrity</div>
+              <div class="card-desc">Automated QC gate prevents misattributed samples from contaminating downstream analyses and clinical reports.</div>
+            </div>
+            <div class="impact-card" style="border-left: 3px solid var(--blue-500);">
+              <div class="card-title">Fail-Fast Architecture</div>
+              <div class="card-desc">Early detection avoids wasting compute on downstream steps for compromised samples — saving hours of batch runtime.</div>
+            </div>
+            <div class="impact-card" style="border-left: 3px solid var(--amber-500);">
+              <div class="card-title">Pipeline Orchestration</div>
+              <div class="card-desc"><strong>Next:</strong> Migrate execution to Nextflow with AWS Batch as the backend executor, enabling fully automated job scheduling, elastic scaling, and end-to-end pipeline orchestration without manual intervention.</div>
+            </div>
+            <div class="impact-card" style="border-left: 3px solid var(--emerald-500);">
+              <div class="card-title">Identity Resolution</div>
+              <div class="card-desc"><strong>Next:</strong> Graph-based clustering on historical LOD matrices to propose true sample identity, not just flag the swap.</div>
+            </div>
+          </div>
+
+          <aside class="notes">
+            --- IMPACT & PIPELINE ORCHESTRATION ---
+
+            To wrap up — / this pipeline provides a high-confidence, automated QC [Q-C] gate / that has already caught misattributed samples in production. /
+
+            Because the check runs early in the Nextflow [NEXT-flow] workflow, / we fail fast / and avoid wasting compute on downstream steps for compromised samples. /
+
+            For next steps: / we are planning to migrate the pipeline execution to Nextflow with AWS Batch as the backend executor, / which will give us fully automated job scheduling / and elastic scaling without manual intervention. /
+
+            --- IDENTITY RESOLUTION (if asked to elaborate) ---
+
+            The other direction I want to take this / is graph-based identity resolution. / Right now, the pipeline tells you THAT a swap happened / — but it can't tell you WHO the sample actually belongs to. /
+
+            Here's what I mean concretely. / Imagine a batch of six samples across three families. / After CrosscheckFingerprints runs, / we build a graph where each sample is a node, / and we draw an edge between any pair with a LOD [L-O-D] above our match threshold. /
+
+            In a clean batch, / you'd see three separate clusters — / one per family. / But if sample S6, labeled Family C, / actually shows a strong LOD of 38.9 to Family A samples — / it clusters with Family A instead. / Meanwhile, S5_FamC is an isolate / — it has no genetic match to anyone. /
+
+            So the graph doesn't just flag the mismatch — / it shows the STRUCTURE of the error. / S6 genetically belongs to Family A, / and S5 lost its pair, / which tells us the labels on S5 and S6 were likely swapped during accessioning [ak-SESH-un-ing]. /
+
+            This scales to harder cases too — / like cross-family mix-ups / where two families have their sample pairs swapped. / The graph reveals the pattern across all pairs simultaneously / rather than just flagging individual mismatches. /
+
+            One important boundary: / for clinical samples, / the graph would only PROPOSE a correction — / a human reviewer must approve any identity reassignment / before the pipeline continues. / For research samples, / auto-correction with logging could be acceptable. /
+
+            And a known limitation — / this works best for unrelated individuals. / For family studies with related donors, / intermediate LOD scores could create false edges, / so we'd fall back to the pairwise three-zone rule in those cases. /
+
+            Thank you, / and I'm happy to take any questions.
+          </aside>
+        </section>
+
+        <!-- Slide 7 — Q&A -->
+        <section class="qa-slide">
+
+          <h2>Questions &amp; Discussion</h2>
+          <div class="qa-divider"></div>
+          <p>Thank you for your time. This pipeline has been running in production and has already caught sample misattributions that would have impacted downstream clinical reporting.</p>
+          <aside class="notes">
+            Open floor for questions. / Be prepared to discuss: / LOD [L-O-D] threshold calibration for different sequencing depths, / handling of multi-sample families, / the Nextflow [NEXT-flow] to AWS Batch migration plan, / integration with existing LIMS [limz] systems, / and specific examples of swaps caught in production.
+          </aside>
+        </section>
+
+        <!-- Slide 8 - Appendix: CrosscheckFingerprints Invocation -->
+        <section>
+          <div class="slide-header">
+            <div class="slide-header-icon slate"></div>
+            <h3 style="margin:0;">Appendix: CrosscheckFingerprints Invocation</h3>
+          </div>
+          <pre><code data-trim data-noescape class="plaintext"><span style="color: var(--blue-500);">java -jar picard.jar CrosscheckFingerprints \</span>
+    VALIDATION_STRINGENCY=LENIENT \
+    INPUT=./data/sample_A.hard-filtered.vcf \
+    INPUT=./data/sample_B.hard-filtered.vcf \
+    HAPLOTYPE_MAP=hg19_chr.map \
+    LOD_THRESHOLD=-5 \
+    CROSSCHECK_BY=FILE \
+    CALCULATE_TUMOR_AWARE_RESULTS=false \
+    NUM_THREADS=6 \
+    OUTPUT=sample_A.vs.sample_B.crosscheck_metrics
+          </code></pre>
+
+          <div class="code-annotations" style="flex-wrap: wrap;">
+            <div class="code-annotation"><span class="dot dot-classify"></span> <code>HAPLOTYPE_MAP</code>: SNP marker panel grouped into LD blocks for genotype concordance</div>
+            <div class="code-annotation"><span class="dot dot-classify"></span> <code>LOD_THRESHOLD=-5</code>: mirrors the mismatch boundary from the three-zone rule</div>
+            <div class="code-annotation"><span class="dot dot-classify"></span> <code>CROSSCHECK_BY=FILE</code>: each VCF treated as one fingerprint group</div>
+            <div class="code-annotation"><span class="dot dot-classify"></span> <code>CALCULATE_TUMOR_AWARE_RESULTS=false</code>: somatic caller used only as a sensitive genotyper, not for tumor/normal LOD adjustment</div>
+          </div>
+
+          <aside class="notes">
+            This is a reference slide: only pull it up if asked how the tool is actually invoked. Walk through HAPLOTYPE_MAP first since that's the input that defines the marker panel and haplotype blocks. LOD_THRESHOLD here is set to -5, which is the mismatch boundary from the three-zone rule on slide 3: Picard itself only distinguishes match/mismatch/ambiguous around this single threshold, and our three-zone logic on top of it adds the +5 match boundary and the defer-to-source behavior in the undetermined band. CROSSCHECK_BY=FILE means each input VCF is treated as a single fingerprint group rather than splitting by read group or library. CALCULATE_TUMOR_AWARE_RESULTS=false is set because the somatic caller upstream is being used purely as a sensitive genotyper to extract germline-fingerprint SNPs from RNA-seq: we're not doing an actual tumor/normal comparison, so the tumor-aware LOD adjustment doesn't apply.
+          </aside>
+        </section>
+
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/notes/notes.min.js"></script>
+    <script>
+      Reveal.initialize({
+        plugins: [ RevealHighlight, RevealNotes ],
+        slideNumber: 'c/t',
+        hash: true,
+        progress: true,
+        controls: true,
+        controlsTutorial: false,
+        transition: 'slide',
+        transitionSpeed: 'default',
+        width: 1280,
+        height: 720,
+        margin: 0.08,
+      });
+    </script>
+  </body>
+</html>
